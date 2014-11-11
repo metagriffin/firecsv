@@ -4,7 +4,20 @@ FireCsv
 
 
 View pretty CSV directly from within Firefox (done) and Thunderbird
-(coming).
+(coming). For example, the following CSV:
+
+.. code-block:: text
+
+  Name,Email,Age
+  Joe Schmoe,joe@example.com,38
+  "Doe, Jane",jane@example.com,72
+  "Little One
+  (aka ""babyface"")",baby@example.com,0.25
+
+is rendered as:
+
+.. image:: https://raw.github.com/metagriffin/firecsv/master/raw/screenshot.png
+  :alt: CSV rendered inline with FireCsv
 
 
 Current Features
