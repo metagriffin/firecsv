@@ -50,7 +50,7 @@ clean:
 run:
 	@make --no-print-directory version
 	./server.py -p 8000 &
-        cfx run
+	cfx run
 	@make --no-print-directory clean
 
 font:
