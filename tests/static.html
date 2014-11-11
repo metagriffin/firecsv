@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <link rel="stylesheet" type="text/css" href="../data/default.css"/>
+    <script>
+var FireCsv = {
+  options: {
+    header        : 'auto'
+    // maxUrlLength  : 30
+  }
+};
+    </script>
+    <script src="../data/jquery-1.11.1.min.js"></script>
+    <script src="../data/jquery.csv-0.71.min.js"></script>
+    <script src="../data/underscore-1.7.0.min.js"></script>
+    <script src="../data/default.js"></script>
+  </head>
+  <body id="FireCsv">
+    <div id="Clamp">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <thead></thead>
+        <tbody></tbody>
+      </table>
+      <pre id="RawData">name,email,url,age
+Joe Schmoe,joe@example.com,http://example.com/path/to/joe,38,x-TRA!
+"Doe, Jane",jane@example.com,http://example.com/path/to/jane,72
+"Little One
+(aka ""babyface"")",baby@example.com,,0.25
+</pre>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,152 @@
+/* -*- coding: utf-8 -*-
+ *-----------------------------------------------------------------------------
+ * file: $Id$
+ * auth: metagriffin <mg.github@metagriffin.net>
+ * date: 2014/11/09
+ * copy: (C) Copyright 2014-EOT metagriffin -- see LICENSE.txt
+ *-----------------------------------------------------------------------------
+ * This software is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see http://www.gnu.org/licenses/.
+ *---------------------------------------------------------------------------*/
+
+@import "FireCsvIcon/style.css";
+
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+#FireCsv {
+  font: 18px/1.2 "Helvetica", "Arial", "sans-serif";
+  background: #fff;
+  color: #333;
+  padding: 30px;
+}
+
+#Clamp {
+  display: table;
+  margin: auto;
+}
+
+#FireCsv.parsed #RawData {
+  display: none;
+}
+
+.cell {
+  padding: 15px 30px;
+  white-space: pre;
+}
+
+th {
+  position: relative;
+  background: #ccc;
+  cursor: pointer;
+}
+
+th > .cell {
+  border-bottom: 2px solid #666;
+}
+
+tbody > tr {
+  transition: background 0.1s ease-out;
+}
+
+tbody > tr:nth-child(even) {
+  background: #f7f7f7;
+}
+
+tbody:hover > tr:nth-child(even) {
+  /* background: #fcfcfc; */
+}
+
+tbody:hover > tr:hover {
+  background: #f8eab7;
+}
+
+#Clamp > table {
+  border-bottom: 2px solid #666;
+}
+
+th > .control {
+  visibility: hidden;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  opacity: 0.1;
+  transition: all 0.2s ease-out;
+  font-size: 80%;
+}
+
+th.sorted > .control {
+  visibility: visible;
+}
+
+th.sorted[sorted-index="0"] > .control { opacity: 0.8; }
+th.sorted[sorted-index="1"] > .control { opacity: 0.4; }
+th.sorted[sorted-index="2"] > .control { opacity: 0.2; }
+
+th:hover > .control {
+  visibility: visible;
+  opacity: 1 !important;
+  font-size: 100%;
+}
+
+tr.empty .cell {
+  padding: 2em 4em;
+  color: #999;
+  font-size: 120%;
+  font-style: italic;
+  text-align: center;
+}
+
+td {
+  position: relative;
+}
+
+td > .cell.type-number {
+  font-family: monospace;
+}
+
+td > .cell.type-number.column-type {
+  text-align: right;
+}
+
+td > .cell.type-url {
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/*
+ * TODO: this auto-expansion should NOT occur if there is no ellipsis!...
+ * todo: this auto-expansion should probably be done for any large cell...
+ * todo: this probably falls apart a bit if there is only one row...
+ */
+
+td > .cell.type-url:not(.type-null):hover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  border: 1px solid #666;
+  border-radius: 10px;
+  padding: 14px 29px;
+  max-width: none;
+  overflow: visible;
+  background: #f8eab7;
+  box-shadow: 0 0 1px 1px #fff;
+}
+
+/*-----------------------------------------------------------------------------
+ * end of $Id$
+ *---------------------------------------------------------------------------*/

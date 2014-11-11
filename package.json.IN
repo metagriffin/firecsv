@@ -1,0 +1,19 @@
+{
+  "id"           : "586de965-3ac7-4f4f-8f39-5ceae75c040f",
+  "version"      : "{{VERSION}}",
+  "name"         : "firecsv",
+  "title"        : "FireCsv",
+  "description"  : "View pretty CSV directly from within Firefox and Thunderbird.",
+  "homepage"     : "http://github.com/metagriffin/firecsv",
+  "author"       : "metagriffin",
+  "license"      : "GPLv3+",
+  "preferences"  : [{
+    "name"         : "csvHttpAccept",
+    "type"         : "bool",
+    "value"        : true,
+    "title"        : "Include \"text/csv\" in the \"Accept\" header",
+    "description"  : "Indicates to remote servers that CSV can be rendered natively"
+  }],
+  "contributors" : [],
+  "translators"  : []
+}

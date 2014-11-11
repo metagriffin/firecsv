@@ -1,0 +1,5 @@
+name,email,url,age
+Joe Schmoe,joe@example.com,http://example.com/path/to/joe,38
+"Doe, Jane",jane@example.com,http://example.com/path/to/jane,72
+"Little One
+(aka ""babyface"")",baby@example.com,,0.25

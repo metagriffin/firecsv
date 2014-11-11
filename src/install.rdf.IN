@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns" xmlns:em="http://www.mozilla.org/2004/em-rdf">
+  <Description about="urn:mozilla:install-manifest">
+
+    <em:id>586de965-3ac7-4f4f-8f39-5ceae75c040f</em:id>
+    <em:version>{{VERSION}}</em:version>
+
+    <em:name>FireCsv</em:name>
+    <em:description>View pretty CSV directly from within Firefox and Thunderbird.</em:description>
+    <em:creator>metagriffin</em:creator>
+    <em:homepageURL>http://github.com/metagriffin/firecsv</em:homepageURL>
+    <em:iconURL>chrome://firecsv/skin/logo.png</em:iconURL>
+    <em:optionsURL>chrome://firecsv/content/prefs/prefs.xul</em:optionsURL>
+    <em:type>2</em:type>
+
+    <!-- JSONView used as addon model -->
+    <!-- em:contributor>Benjamin Hollis</em:contributor-->
+
+    <!-- em:translator>{NAME}</em:translator>
+    <em:localized>
+      <Description>
+        <em:locale>{LOCALE}</em:locale>
+        <em:description>{LOCALIZED-DESCRIPTION}</em:description>
+      </Description>
+    </em:localized-->
+
+    <em:targetApplication>
+      <Description>
+        <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
+        <em:minVersion>21.0</em:minVersion>
+        <!--em:maxVersion>33.*</em:maxVersion-->
+      </Description>
+    </em:targetApplication>
+
+  </Description>
+</RDF>
