@@ -217,11 +217,13 @@ var makeCellElement = function(column, item) {
 };
 
 //-----------------------------------------------------------------------------
-var makeDataRowElement = function(columns, items) {
+var makeDataRowElement = function(row, columns, items) {
   var el = document.createElement('tr');
   for ( var idx=0 ; idx<columns.length ; idx++ )
   {
     var cel = document.createElement('td');
+    // note: using `attr` instead of `data` so that it can be CSS-targeted...
+    $(cel).attr('data-col', idx).attr('data-row', row);
     cel.appendChild(makeCellElement(
       columns[idx], items.length > idx ? items[idx] : null));
     el.appendChild(cel);
@@ -236,8 +238,8 @@ var makeHeadRowElement = function(columns) {
   {
     var col = columns[idx];
     var cel = document.createElement('th');
-    // todo: i18n...
-    $(cel).data('column-index', idx).attr(
+    // note: using `attr` instead of `data` so that it can be CSS-targeted...
+    $(cel).attr('data-col', idx).attr('data-row', 0).attr(
       'title',
       $L('Click to cycle through sorting by this column alone\n'
          + 'Shift-click to prefix this column to the current sorted columns'));
@@ -310,7 +312,7 @@ var redraw = function() {
       var row = FireCsv.data[idx];
       FireCsv.rows.push({
         data : row,
-        el   : makeDataRowElement(FireCsv.head, row)
+        el   : makeDataRowElement(idx + 1, FireCsv.head, row)
       });
     }
   }
@@ -342,6 +344,39 @@ var pushSort = function (col, dir, clear) {
 };
 
 //-----------------------------------------------------------------------------
+// ACTIONS
+//-----------------------------------------------------------------------------
+
+var cycleColumnSort = function(index, clear) {
+  var col   = $('#TabularData thead th[data-col="' + index + '"]');
+  dir({cycle:{i:index,c:clear,col:col}});
+  var head  = col.parent();
+  var icon  = col.find('.control .sort');
+  var sort  = null;
+  if ( ! col.hasClass('sorted') )
+    sort = 'asc';
+  else
+    sort = col.hasClass('sorted-asc') ? 'desc' : null;
+  pushSort(parseInt(col.data('col')), sort, clear);
+  // clear all sort indicators
+  head.find('th')
+    .removeClass('sorted sorted-desc sorted-asc');
+  head.find('th .control .sort')
+    .addClass('icon-arrow-updown').removeClass('icon-arrow-up icon-arrow-down');
+  // add enabled sort columns
+  for ( var idx=0 ; idx<FireCsv.sort.length ; idx++ )
+  {
+    var item = FireCsv.sort[idx];
+    if ( ! item.dir ) // paranoia -- this should never happen
+      continue;
+    var $item = head.find('th:nth-child(' + ( item.col + 1 ) + ')');
+    $item.addClass('sorted sorted-' + item.dir).attr('sorted-index', idx);
+    $item.find('.control .sort')
+    .removeClass('icon-arrow-updown').addClass('icon-arrow-' + ( item.dir == 'asc' ? 'down' : 'up') );
+  }
+};
+
+//-----------------------------------------------------------------------------
 // INTEGRATION
 //-----------------------------------------------------------------------------
 
@@ -354,32 +389,7 @@ $(document).ready(function() {
     // $.Event(event).preventDefault();
     // $.Event(event).stopPropagation();
     // $.Event(event).stopImmediatePropagation();
-    var col   = $(this);
-    var head  = col.parent();
-    var icon  = col.find('.control .sort');
-    var sort  = null;
-    var clear = ! event.shiftKey;
-    if ( ! col.hasClass('sorted') )
-      sort = 'asc';
-    else
-      sort = col.hasClass('sorted-asc') ? 'desc' : null;
-    pushSort(parseInt(col.data('column-index')), sort, clear);
-    // clear all sort indicators
-    head.find('th')
-      .removeClass('sorted sorted-desc sorted-asc');
-    head.find('th .control .sort')
-      .addClass('icon-arrow-updown').removeClass('icon-arrow-up icon-arrow-down');
-    // add enabled sort columns
-    for ( var idx=0 ; idx<FireCsv.sort.length ; idx++ )
-    {
-      var item = FireCsv.sort[idx];
-      if ( ! item.dir ) // paranoia -- this should never happen
-        continue;
-      var $item = head.find('th:nth-child(' + ( item.col + 1 ) + ')');
-      $item.addClass('sorted sorted-' + item.dir).attr('sorted-index', idx);
-      $item.find('.control .sort')
-        .removeClass('icon-arrow-updown').addClass('icon-arrow-' + ( item.dir == 'asc' ? 'down' : 'up') );
-    }
+    cycleColumnSort($(this).data('col'), ! event.shiftKey);
   });
 });
 
