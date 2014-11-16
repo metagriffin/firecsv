@@ -42,10 +42,18 @@ var url_cre    = new RegExp(/^[-+.a-z0-9]{2,}:\/\/[^\s]+$/i);
 // HELPERS
 //-----------------------------------------------------------------------------
 
+var log = _.bind(console.log, console);
+var dir = _.bind(console.dir, console);
+
 var arrayEqual = function(a, b) {
   return (a.length == b.length) && a.every(function(element, index) {
     return element === b[index];
   });
+};
+
+var $L = function(str, params) {
+  // TODO: i18n...
+  return str;
 };
 
 //-----------------------------------------------------------------------------
@@ -231,7 +239,8 @@ var makeHeadRowElement = function(columns) {
     // todo: i18n...
     $(cel).data('column-index', idx).attr(
       'title',
-      'Click to cycle through sorting by this column alone\nShift-click to prefix this column to the current sorted columns');
+      $L('Click to cycle through sorting by this column alone\n'
+         + 'Shift-click to prefix this column to the current sorted columns'));
     var div = document.createElement('div');
     div.className = 'cell';
     if ( col.type )
@@ -315,7 +324,9 @@ var redraw = function() {
     tbody.html(
       '<tr class="empty"><td colspan="'
         + ( FireCsv.head.length + 1 )
-        + '" class="empty"><div class="cell">No data.</div></td></tr>');
+        + '" class="empty"><div class="cell">'
+        + $L('No data.')
+        + '</div></td></tr>');
 };
 
 //-----------------------------------------------------------------------------
