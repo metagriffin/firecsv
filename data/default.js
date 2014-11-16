@@ -160,8 +160,11 @@ var prepare = function() {
   FireCsv.data = data;
   FireCsv.head = head;
   $('#FireCsv').addClass('parsed');
-  $('thead').empty().append(makeHeadRowElement(FireCsv.head));
-
+  var table = $('#TabularData').empty();
+  var thead = document.createElement('thead');
+  thead.appendChild(makeHeadRowElement(FireCsv.head));
+  table.append(thead);
+  table.append(document.createElement('tbody'));
   return true;
 };
 
@@ -303,7 +306,7 @@ var redraw = function() {
     }
   }
   var items = sortedData(FireCsv.rows, FireCsv.sort);
-  var tbody = $('tbody');
+  var tbody = $('#TabularData tbody');
   tbody.empty();
   for ( var idx=0 ; idx<items.length ; idx++ )
     tbody.append(items[idx].el);
