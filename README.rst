@@ -19,6 +19,11 @@ is rendered as:
 .. image:: https://raw.github.com/metagriffin/firecsv/master/raw/screenshot.png
   :alt: CSV rendered inline with FireCsv
 
+Another example with pie charts:
+
+.. image:: https://raw.github.com/metagriffin/firecsv/master/raw/screenshot.png
+  :alt: CSV rendered inline with FireCsv
+
 
 Current Features
 ================
@@ -27,6 +32,7 @@ Current Features
 * Column-based sorting
 * Auto-detection of numbers, emails, and URLs 
 * Data is never altered; only the rendering may be enhanced
+* Rendering of all-numeric columns as pie charts
 
 
 Future Features
