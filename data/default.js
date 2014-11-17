@@ -51,9 +51,13 @@ var arrayEqual = function(a, b) {
   });
 };
 
-var $L = function(str, params) {
+// switch to python ".format" style templating
+_.templateSettings.escape      = /{h\(([\s\S]+?)\)}/g;
+_.templateSettings.evaluate    = /{{([\s\S]+?)}}/g;
+_.templateSettings.interpolate = /{([\s\S]+?)}/g;
+var $L = function(template, params) {
   // TODO: i18n...
-  return str;
+  return _.template(template)(params);
 };
 
 //-----------------------------------------------------------------------------
@@ -162,7 +166,7 @@ var prepare = function() {
         if ( arrayEqual(data[ridx][cidx].types, ['null']) )
           data[ridx][cidx].types.push(col.type);
       }
-    } 
+    }
   }
 
   FireCsv.data = data;
@@ -173,6 +177,10 @@ var prepare = function() {
   thead.appendChild(makeHeadRowElement(FireCsv.head));
   table.append(thead);
   table.append(document.createElement('tbody'));
+
+  if ( FireCsv.data.length > 0 )
+    displayHint();
+
   return true;
 };
 
@@ -203,7 +211,7 @@ var makeCellElement = function(column, item) {
   }
   if ( column.type && _.contains(item.types, column.type) )
     el.className += ' column-type';
-  value = '' + item.value;
+  value = '' + ( item.value == null ? '' : item.value );
   // todo: this can never be "schmart" enough...
   if ( arrayEqual(item.types, ['email']) ) {
     value = '<a href="mailto:' + _.escape(value) + '">' + _.escape(value) + '</a>';
@@ -247,7 +255,7 @@ var makeHeadRowElement = function(columns) {
     div.className = 'cell';
     if ( col.type )
       div.className += ' column-type type-' + col.type;
-    $(div).text(col.value != null ? col.value : 'Column ' + ( idx + 1 ));
+    $(div).text(col.value != null ? col.value : $L('Column {index}', {index: idx + 1}));
     cel.appendChild(div);
     var ctl = document.createElement('div');
     ctl.className = 'control';
@@ -344,12 +352,182 @@ var pushSort = function (col, dir, clear) {
 };
 
 //-----------------------------------------------------------------------------
+// GRAPHING
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+var pivotData = function(data) {
+  var pivot = [];
+  for ( var cidx=0 ; cidx<data.length ; cidx++ )
+    for ( var ridx=0 ; ridx<data[cidx].length ; ridx++ ) {
+      if ( pivot[ridx] === undefined )
+        pivot[ridx] = [];
+      pivot[ridx][cidx] = data[cidx][ridx];
+    }
+  return pivot;
+}
+
+//-----------------------------------------------------------------------------
+var extractSets = function(data) {
+  var ispivot = ( arguments.length > 1 && arguments[1] );
+  if ( data.length <= 0 || data[0].length <= 0 )
+    return [];
+  if ( arguments.length <= 1 && data.length > data[0].length )
+    return extractSets(pivotData(data), false);
+  var numeric = [];
+  for ( var cidx=0 ; cidx<data.length ; cidx++ ) {
+    var isnum = true;
+    for ( var ridx=0 ; ridx<data[cidx].length ; ridx++ ) {
+      var cell = data[cidx][ridx].data;
+      if ( cell == null || _.contains(cell.types, 'null') )
+        continue;
+      if ( _.isNumber(cell.parsed) )
+        continue;
+      // todo: note that _.isNumber returns true for Infinity and NaN...
+      //       what should *we* do?...
+      isnum = false;
+      break;
+    }
+    if ( isnum )
+      numeric.push(cidx);
+  }
+  if ( numeric.length <= 0 ) {
+    if ( ispivot )
+      return [];
+    return extractSets(pivotData(data), true);
+  }
+  var sets = [];
+  var lbls = null;
+  if ( numeric.length < data.length ) {
+    for ( var idx=0 ; idx<data.length ; idx++ ) {
+      if ( _.contains(numeric, idx) )
+        continue;
+      lbls = _.map(data[idx], function(cell) {
+        if ( cell.data && cell.data.value && cell.data.value.length > 0 )
+          return cell.data.value;
+        if ( ispivot )
+          return $L('Column {index}', {index: cell.col + 1});
+        return $L('Row {index}', {index: cell.row + 1});
+      });
+      break;
+    }
+  } else {
+    lbls = _.map(data[0], function(cell) {
+      if ( ispivot )
+        return $L('Column {index}', {index: cell.col + 1});
+      return $L('Row {index}', {index: cell.row + 1});
+    });
+  }
+  // todo: move to multiple data series per set?...
+  //       ==> the graphing subsystem needs to support that too.
+  for ( var idx=0 ; idx<numeric.length ; idx++ ) {
+    var set = {labels: lbls};
+    set.series = [_.map(data[numeric[idx]], function(cell) {
+      if ( ! cell.data || cell.data.parsed === undefined )
+        return null;
+      return cell.data.parsed;
+    })];
+    sets.push(set);
+  }
+  return sets;
+};
+
+//-----------------------------------------------------------------------------
+var displayHint = function(hint) {
+  if ( hint === undefined )
+    hint = $L('Control + Click/Drag to graph a selection');
+  if ( hint === 'numeric' )
+    hint = $L('At least one row or column must be all-numeric to graph');
+  $('#GraphData').html('<div class="hint"></div>').children().html(hint);
+};
+
+//-----------------------------------------------------------------------------
+var graphSetInto = function(set, div, size) {
+  var el = div.html('<canvas class="chart"></canvas>').children();
+  el.attr('width', size).attr('height', size);
+
+  var options = {
+    animationEasing     : 'easeOutQuart',
+    animationSteps      : 20,
+    animation           : false // true
+  };
+
+  // todo: clump "little" portions into an "Other" category...
+  //       ==> what if the already *is* an "Other" category...
+
+  // todo: this assumes that there is only one series...
+  //       when extractSets returns multi-sets, improve this!
+  var data = _.map(set.series[0], function(val, idx) {
+    return {
+      value: val,
+      label: set.labels[idx],
+      color:
+        'hsl(' + Math.floor(Math.round(360.0 * idx / set.labels.length)) + ', '
+        + ( FireCsv.options.graphSaturation || '50' ) + '%, '
+        + ( FireCsv.options.graphSaturation || '50' ) + '%)'
+    };
+  });
+
+  new Chart(el.get(0).getContext('2d')).Pie(data, options);
+};
+
+//-----------------------------------------------------------------------------
+var graphSet = function(set, div, index, size) {
+  // give the browser a short break
+  setTimeout(function() {
+    graphSetInto(set, div, size);
+    div.removeClass('loading');
+  }, 100 * ( index + 1 ));
+  return div;
+};
+
+//-----------------------------------------------------------------------------
+var graphSets = function(sets) {
+  if ( sets.length <= 0 )
+    return;
+  var gzone = $('#GraphData').empty();
+  var els = [];
+  for ( var idx=0 ; idx<sets.length ; idx++ ) {
+    var div = $(document.createElement('div'));
+    div.addClass('graphset loading').attr('data-graphset-index', idx);
+    els.push(div);
+    gzone.append(div);
+  }
+  var size = els[0].width();
+  for ( var idx=0 ; idx<sets.length ; idx++ )
+    graphSet(sets[idx], els[idx], idx, size);
+};
+
+//-----------------------------------------------------------------------------
+//`graphData` expects a two-dimensional array of COLUMN/ROW. the cell
+// dimension is an object with the following attributes: `col` the
+// column index, `row` the row index, `data` is either null or an
+// object as stored in FireCsv.data[][] or FireCsv.head[]. note that
+// the column index and row index refer to the FireCsv values, not the
+// passed-in data array indeces. the COLUMN and ROW dimensions must
+// have an entry for *every* cell, even if the .data points to null.
+var graphData = function(data) {
+  if ( data.length <= 0 ) {
+    if ( ! FireCsv.gsets || FireCsv.gsets.length <= 0 )
+      displayHint();
+    return;
+  }
+  // TODO: optimize to see if anything changed...
+  //       ==> maybe even differential updating?...
+  //       ==> what about DYNAMIC data?... woohoo! :)
+  FireCsv.gsets = extractSets(data);
+  if ( FireCsv.gsets.length <= 0 )
+    return displayHint('numeric');
+  graphSets(FireCsv.gsets);
+}
+
+//-----------------------------------------------------------------------------
 // ACTIONS
 //-----------------------------------------------------------------------------
 
+//-----------------------------------------------------------------------------
 var cycleColumnSort = function(index, clear) {
   var col   = $('#TabularData thead th[data-col="' + index + '"]');
-  dir({cycle:{i:index,c:clear,col:col}});
   var head  = col.parent();
   var icon  = col.find('.control .sort');
   var sort  = null;
@@ -372,8 +550,54 @@ var cycleColumnSort = function(index, clear) {
     var $item = head.find('th:nth-child(' + ( item.col + 1 ) + ')');
     $item.addClass('sorted sorted-' + item.dir).attr('sorted-index', idx);
     $item.find('.control .sort')
-    .removeClass('icon-arrow-updown').addClass('icon-arrow-' + ( item.dir == 'asc' ? 'down' : 'up') );
+      .removeClass('icon-arrow-updown')
+      .addClass('icon-arrow-' + ( item.dir == 'asc' ? 'down' : 'up') );
   }
+};
+
+//-----------------------------------------------------------------------------
+var checkSelection = function() {
+  var sel   = window.getSelection();
+  if ( sel.isCollapsed || ! sel.focusNode || ! sel.focusNode.nodeName )
+    return;
+  if ( ! _.contains(['tr', 'th', 'td'], sel.focusNode.nodeName.toLowerCase()) )
+    return;
+  var data = [];
+  for ( var idx=0 ; idx<sel.rangeCount ; idx++ ) {
+    var range = sel.getRangeAt(idx);
+    // todo: find out what firefox *really* guarantees when a "tabular"
+    //       selection is made...
+    if ( range.startContainer.nodeName.toLowerCase() !== 'tr'
+         || range.startContainer !== range.endContainer )
+      continue;
+    for ( var off=range.startOffset ; off<range.endOffset ; off++ ) {
+      var el = $(range.startContainer.children[off]);
+      el = {col: el.data('col'), row: el.data('row')};
+      if ( el.row == 0 )
+        el.data = FireCsv.head[el.col];
+      else
+        el.data = FireCsv.data[el.row - 1][el.col];
+      data.push(el);
+    }
+  }
+  if ( data.length <= 0 )
+    return;
+  var cols  = _.uniq(_.map(data, function(el) { return el.col; }));
+  var rows  = _.uniq(_.map(data, function(el) { return el.row; }));
+  var tdata = [];
+  for ( var cidx=0 ; cidx<cols.length ; cidx++ ) {
+    var col  = cols[cidx];
+    var tcol = [];
+    for ( var ridx=0 ; ridx<rows.length ; ridx++ ) {
+      var row  = rows[ridx];
+      var trow = _.find(data, function(el) { return el.col == col && el.row == row; });
+      if ( ! trow )
+        trow = {col: col, row: row, data: null};
+      tcol.push(trow);
+    }
+    tdata.push(tcol);
+  }
+  graphData(tdata);
 };
 
 //-----------------------------------------------------------------------------
@@ -390,6 +614,13 @@ $(document).ready(function() {
     // $.Event(event).stopPropagation();
     // $.Event(event).stopImmediatePropagation();
     cycleColumnSort($(this).data('col'), ! event.shiftKey);
+  });
+  $(document).mouseup(function(event) {
+    // todo: the setTimeout is to allow firefox to *DE*select any rows
+    //       (oddly, the getSelection() is updated by the time we get
+    //       here only when *adding* cells to the selection, but not
+    //       when removing.)
+    setTimeout(checkSelection, 1);
   });
 });
 
