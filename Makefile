@@ -20,6 +20,7 @@
 #------------------------------------------------------------------------------
 
 PROCESSED       = package.json src/install.rdf
+XPIFILE         = dist/firecsv-$(shell cat VERSION.txt).xpi
 
 help:
 	@echo "make targets:"
@@ -41,7 +42,15 @@ _version:
 
 xpi:
 	@make --no-print-directory version
-	cfx xpi
+	rm --force "$(XPIFILE)"
+	cfx xpi --output-file "$(XPIFILE)"
+	rm -fr build && mkdir -p build
+	unzip -q "$(XPIFILE)" -d build
+	rm --force "$(XPIFILE)" build/install.rdf
+	cp src/install.rdf build
+	cd build && zip -r -9 "../$(XPIFILE).zip" .
+	rm -fr build
+	mv "$(XPIFILE).zip" "$(XPIFILE)"
 	@make --no-print-directory clean
 
 clean:
