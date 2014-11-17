@@ -37,6 +37,9 @@ Future Features
 * Implement Thunderbird integration
 * Add options, e.g. "headers enabled", etc.
 * URL and/or header signature based memoization of options
+* Add many other auto-detection routines, including:
+  * Date / Timestamp
+  * Currency
 
 
 Contributing

@@ -7,3 +7,39 @@ TODO's
 
 * optimize the data passing from addon to embedded HTML... as it stands,
   its disgusting.
+
+* add support for CURRENCY auto-detection
+  ==> all currency symbols: ₳฿₵¢₡₢$₫₯₠€ƒ₣₲₴₭₺ℳ₥₦₧₱₰£៛₹₨₪৳₸₮₩¥... more?
+  ==> support all locales: 100,000.00 and 100.000,00... more?
+
+* add support for DATE auto-detection
+
+* when there is data that is graphed, and the tabular data is
+  re-sorted, should it re-draw the graphs? probably. or at the
+  very least that should be an option...
+
+* when no-header mode is supported (i.e. the data does not hav a header
+  record), then the auto-generated graph labels need to account for
+  that in the numbering.
+
+* make it responsive!
+
+* auto-select the data if there is only one apparent record
+
+* allow "pinning" of graphs, so that a change in selection does not
+  replace it.
+
+* currently, if you "save page as..." using type "web page, html only",
+  it saves the original CSV. perfect.
+  the issue is that type "web page, complete" and "text files" don't.
+  fix that to either include a (hidden) warning or figure out how to
+  always force it to save the CSV.
+
+* when a selection is made, but no pure-numeric series can be found,
+  perhaps try to find a series that has *mostly* numeric, and ignore
+  the non-numeric?...
+
+* add captions to the graphs.
+
+* if the selection has a non-numeric column and a non-numeric row,
+  then use one of them as the series label.
