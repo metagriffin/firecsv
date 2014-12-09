@@ -3,6 +3,9 @@ TODO's
 ======
 
 
+* sort-cycling should cycle through asc/desc without shiftkey. with
+  shiftkey, it should cycle through asc/desc/none.
+
 * minify all data/*.(css|js)
 
 * optimize the data passing from addon to embedded HTML... as it stands,
@@ -43,3 +46,6 @@ TODO's
 
 * if the selection has a non-numeric column and a non-numeric row,
   then use one of them as the series label.
+
+* figure out how to dynamically update the install.rdf with the values
+  from https://addons.mozilla.org/en-US/firefox/pages/appversions/
