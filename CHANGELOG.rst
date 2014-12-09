@@ -3,6 +3,13 @@ ChangeLog
 =========
 
 
+v0.2.2
+======
+
+* Switched to underscore/1.6.0 (since 1.7.0 is not yet supported by
+  AMO)
+
+
 v0.2.1
 ======
 
