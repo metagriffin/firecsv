@@ -21,8 +21,8 @@ is rendered as:
 
 Another example with pie charts:
 
-.. image:: https://raw.github.com/metagriffin/firecsv/master/raw/screenshot.png
-  :alt: CSV rendered inline with FireCsv
+.. image:: https://raw.github.com/metagriffin/firecsv/master/raw/screenshot-pie.png
+  :alt: CSV and pie charts rendered inline with FireCsv
 
 
 Current Features
@@ -44,6 +44,7 @@ Future Features
 * Add options, e.g. "headers enabled", etc.
 * URL and/or header signature based memoization of options
 * Add many other auto-detection routines, including:
+
   * Date / Timestamp
   * Currency
 
