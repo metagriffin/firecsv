@@ -2,6 +2,20 @@
 TODO's
 ======
 
+* re-enable:
+    "preferences"  : [{
+      "name"         : "csvHttpAccept",
+      "type"         : "bool",
+      "value"        : true,
+      "title"        : "Include \"text/csv\" in the \"Accept\" header",
+      "description"  : "Indicates to remote servers that CSV can be rendered natively"
+    }]
+
+* add record number on hover of record
+
+* make empty lines same height as non-empty lines
+
+* UI BUG: when there's a lot of data, the margin-right collapses...
 
 * sort-cycling should cycle through asc/desc without shiftkey. with
   shiftkey, it should cycle through asc/desc/none.
