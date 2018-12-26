@@ -2,6 +2,8 @@
 TODO's
 ======
 
+* ugly rendering when a column label is empty (see lots.csv)
+
 * change the HTML title to be "{filename} ({url}) - FireCsv"
 
 * the "Open in Browser" extension kicks in *before* FireCsv has a chance
