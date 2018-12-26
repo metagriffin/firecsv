@@ -3,6 +3,12 @@ ChangeLog
 =========
 
 
+v0.3.0
+======
+
+* Converted to WebExtension for FF57 compatibility
+
+
 v0.2.2
 ======
 
