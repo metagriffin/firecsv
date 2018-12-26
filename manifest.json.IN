@@ -1,0 +1,55 @@
+{
+  "id"                  : "586de965-3ac7-4f4f-8f39-5ceae75c040f@jetpack",
+  "manifest_version"    : 2,
+  "name"                : "FireCsv",
+  "fullName"            : "FireCsv",
+  "title"               : "FireCsv",
+  "version"             : "{{VERSION}}",
+  "author"              : "metagriffin",
+  "description"         : "View pretty CSV directly from within Firefox and Thunderbird.",
+  "homepage"            : "http://github.com/metagriffin/firecsv",
+  "homepage_url"        : "http://github.com/metagriffin/firecsv",
+  "icons"               : {
+    "24"                  : "firecsv/logo.svg",
+    "32"                  : "firecsv/logo.svg",
+    "48"                  : "firecsv/logo.svg",
+    "64"                  : "firecsv/logo.svg",
+    "128"                 : "firecsv/logo.svg",
+    "256"                 : "firecsv/logo.svg"
+  },
+  "browser_specific_settings" : {
+    "gecko" : {
+      "id"                : "586de965-3ac7-4f4f-8f39-5ceae75c040f@jetpack"
+    }
+  },
+  "applications" : {
+    "gecko" : {
+      "id"                : "586de965-3ac7-4f4f-8f39-5ceae75c040f@jetpack"
+    }
+  },
+  "contributors"        : [],
+  "translators"         : [],
+  "license"             : "GPLv3+",
+  "dependencies"        : [],
+  "permissions"         : [
+    "<all_urls>",
+    "webRequest",
+    "webRequestBlocking"
+  ],
+  "default_locale"      : "en",
+  "web_accessible_resources" : [
+    "libs/jquery-1.11.1.min.js",
+    "libs/jquery.csv-0.71.min.js",
+    "libs/underscore-1.6.0.min.js",
+    "libs/chart-1.0.1-beta.4.min.js",
+    "firecsv/viewer.css",
+    "firecsv/viewer.js"
+  ],
+  "background"     : {
+    "scripts"             : ["extension/background.js"]
+  },
+  "content_scripts"     : [{
+    "matches"             : ["<all_urls>"],
+    "js"                  : ["extension/content.js"]
+  }]
+}

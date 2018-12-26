@@ -19,15 +19,15 @@
 # along with this program. If not, see http://www.gnu.org/licenses/.
 #------------------------------------------------------------------------------
 
-PROCESSED       = package.json src/install.rdf
-XPIFILE         = dist/firecsv-$(shell cat VERSION.txt).xpi
+PROCESSED       = manifest.json
+DISTFILE        = dist/firecsv-$(shell cat VERSION.txt).zip
 
 help:
 	@echo "make targets:"
-	@echo "  version"
-	@echo "  xpi"
-	@echo "  run"
 	@echo "  clean"
+	@echo "  version"
+	@echo "  run"
+	@echo "  build"
 
 include Makefile.git
 
@@ -40,17 +40,10 @@ _version:
 	  cat "$$target.IN" | sed -e "s/{{VERSION}}/$$VERSION/g" > "$$target" ; \
 	done
 
-xpi:
+build:
 	@make --no-print-directory version
-	rm --force "$(XPIFILE)"
-	cfx xpi --output-file "$(XPIFILE)"
-	rm -fr build && mkdir -p build
-	unzip -q "$(XPIFILE)" -d build
-	rm --force "$(XPIFILE)" build/install.rdf
-	cp src/install.rdf build
-	cd build && zip -r -9 "../$(XPIFILE).zip" .
-	rm -fr build
-	mv "$(XPIFILE).zip" "$(XPIFILE)"
+	web-ext build --artifacts-dir dist --overwrite-dest \
+	  --ignore-files src dist raw tests envdev Makefile* build.py *.IN
 	@make --no-print-directory clean
 
 clean:
@@ -58,8 +51,12 @@ clean:
 
 run:
 	@make --no-print-directory version
-	./server.py -p 8000 &
-	cfx run
+	./serve.py -- /bin/bash -c 'web-ext run --start-url $$HTTP_URL/tests/launch.html'
+	@make --no-print-directory clean
+
+run-local:
+	@make --no-print-directory version
+	web-ext run --start-url file://$(shell pwd)/tests/simple.csv
 	@make --no-print-directory clean
 
 font:
@@ -67,9 +64,10 @@ font:
 	  unzip -o -d raw/FireCsvIcon "$${HOME}/Downloads/FireCsvIcon.zip" ; \
 	  rm --force "$${HOME}/Downloads/FireCsvIcon.zip" ; \
 	fi
-	cp --force raw/FireCsvIcon/style.css data/FireCsvIcon/
-	cp --force raw/FireCsvIcon/fonts/* data/FireCsvIcon/fonts/
+	cp --force raw/FireCsvIcon/style.css firecsv/FireCsvIcon/
+	cp --force raw/FireCsvIcon/fonts/* firecsv/FireCsvIcon/fonts/
 
 #------------------------------------------------------------------------------
 # end of $Id$
+# $ChangeLog$
 #------------------------------------------------------------------------------

@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+    <meta charset="UTF-8">
+    <meta name="generator" content="emacs/24.5.1 (yup, proudly hand crafted :)">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href=""/>
+  </head>
+  <body>
+    <!--
+      NOTE: this opens the target URL after a pause (1 second) to give
+      the browser time to load the extension.
+    -->
+    <script type="text/javascript">
+      setTimeout(function() {
+        window.location.href = "/tests/simple.csv";
+      },1000);
+    </script>
+    Available tests:
+    <ul>
+      <li><a href="simple.csv">simple</a></li>
+      <li><a href="narrow.csv">narrow</a></li>
+      <li><a href="multiaxis.csv">multiaxis</a></li>
+      <li><a href="lots.csv">lots</a></li>
+      <li><a href="large-sample-data.csv">large-sample-data</a></li>
+    </ul>
+  </body>
+</html>

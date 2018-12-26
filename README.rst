@@ -32,7 +32,7 @@ Current Features
 * Column-based sorting
 * Auto-detection of numbers, emails, and URLs 
 * Data is never altered; only the rendering may be enhanced
-* Rendering of all-numeric columns as pie charts
+* Rendering of numeric-only columns as pie charts
 
 
 Future Features
@@ -53,7 +53,7 @@ Contributing
 ============
 
 * Fork the `FireCsv <http://github.com/metagriffin/firecsv>`_ project
-* Install `Add-on SDK <https://developer.mozilla.org/en-US/Add-ons/SDK>`_
+* Install `web-ext <https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Getting_started_with_web-ext>`_
 * Make awesome changes
 * Run ``make run`` to test in Firefox
 * Run ``make xpi`` to create an XPI
