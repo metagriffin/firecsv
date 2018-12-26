@@ -54,7 +54,7 @@
     <meta name="generator" content="emacs/24.5.1 (yup, proudly hand crafted :)">
     <title>FireCsv (${htmlEncode(url)})</title>
     <link rel="stylesheet" type="text/css" href="${chrome.runtime.getURL("firecsv/viewer.css")}"/>
-    <script type="text/javascript" src="${chrome.runtime.getURL("libs/jquery-1.11.1.min.js")}"></script>
+    <script type="text/javascript" src="${chrome.runtime.getURL("libs/jquery-3.3.1.min.js")}"></script>
     <script type="text/javascript" src="${chrome.runtime.getURL("libs/jquery.csv-0.71.min.js")}"></script>
     <script type="text/javascript" src="${chrome.runtime.getURL("libs/underscore-1.6.0.min.js")}"></script>
     <script type="text/javascript" src="${chrome.runtime.getURL("libs/chart-1.0.1-beta.4.min.js")}"></script>
