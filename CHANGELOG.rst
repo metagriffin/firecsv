@@ -3,6 +3,12 @@ ChangeLog
 =========
 
 
+v0.3.1
+======
+
+* Upgraded jQuery dependency
+
+
 v0.3.0
 ======
 
