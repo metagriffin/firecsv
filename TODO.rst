@@ -2,6 +2,12 @@
 TODO's
 ======
 
+* change the HTML title to be "{filename} ({url}) - FireCsv"
+
+* the "Open in Browser" extension kicks in *before* FireCsv has a chance
+  to make this an text/html... look into how OiB works and preempt.
+  https://addons.mozilla.org/en-US/firefox/addon/open-in-browser/
+
 * re-enable:
     "preferences"  : [{
       "name"         : "csvHttpAccept",
